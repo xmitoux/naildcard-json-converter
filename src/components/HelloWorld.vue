@@ -1,69 +1,60 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import AqoursSelector from '@/components/AqoursSelector.vue';
 
-defineProps<{ msg: string }>();
+const simpleText = ref('');
+const wildcardText = ref('');
 
-const selectedMember = ref<Aqours | null>(null);
-const onSelectAqours = (member: Aqours | null) => (selectedMember.value = member);
+const convert = () => {
+    const output: Record<string, string[]> = {};
+
+    const lines = simpleText.value.split('\n');
+    let currentKey = '';
+    lines.forEach((line) => {
+        if (!line || /^\s*$/gi.test(line)) {
+            return;
+        } else if (!line.startsWith(':') && line.endsWith(':')) {
+            currentKey = line.slice(0, -1);
+            output[currentKey] = [];
+        } else {
+            if (currentKey) {
+                output[currentKey].push(line);
+            }
+        }
+    });
+
+    wildcardText.value = JSON.stringify(output);
+};
 </script>
 
 <template>
-    <div class="home-container">
-        <h1>{{ msg }}</h1>
-        <div class="selector-container">
-            <div class="horizontal-container">
-                <p>Who's your wife?</p>
-                <AqoursSelector @change="onSelectAqours" />
-            </div>
-            <p v-if="selectedMember === 'Riko'" class="highlight">NO!😠 RIKO IS MY WIFE!!!😡😡😡</p>
-            <p v-else>Your wife is {{ selectedMember ? `${selectedMember}!` : '?' }}</p>
+    <div class="container">
+        <div class="text-container">
+            <h2>Simple Editor</h2>
+            <textarea v-model="simpleText" style="height: 80vh"></textarea>
+        </div>
+
+        <button @click="convert">Convert ⇒</button>
+
+        <div class="text-container">
+            <h2>Wildcard JSON</h2>
+            <textarea v-model="wildcardText" style="height: 80vh"></textarea>
         </div>
     </div>
 </template>
 
 <style scoped>
-.home-container {
-    text-align: center;
-    padding: 20px;
+textarea {
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
 }
 
-.selector-container {
+.text-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.horizontal-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
-}
-
-.selector-container p {
-    margin: 0;
-    font-size: 1.2em;
-}
-
-.highlight {
-    color: red;
-    font-weight: bold;
-    font-size: 1.5em;
-    animation: pulse 1s infinite;
-}
-
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.2);
-    }
-    100% {
-        transform: scale(1);
-    }
+    width: 40%;
 }
 </style>
