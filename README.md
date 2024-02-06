@@ -13,6 +13,6 @@ https://xmitoux.github.io/naildcard-json-converter/
 1. Naildcard `v1.3.0` 以前の Simple Editor からWildcardデータをコピーし、左のテキストエリアに貼り付けます。
 2. Convertボタンを押します。
 3. 右のテキストエリアに新形式のデータが出力されます。
-4. データをコピーして適当なテキストエディタに貼り付け、`.json`で保存します。
+4. SAVE JSONボタンで保存します。
 5. Naildcard を`v1.4.0` にアップデートします。
 6. Wildcard Manager の`Import Wildcards`ボタンを押し、保存したJSONファイルを取り込めば移行完了です。
